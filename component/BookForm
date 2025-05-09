@@ -1,0 +1,63 @@
+// component/BookForm.js
+import { useState } from 'react';
+import styles from './BookForm.module.css';
+
+export default function BookForm({ onSubmit }) {
+    const [focusedField, setFocusedField] = useState(null);
+
+    const handleFocus = (field) => {
+        setFocusedField(field);
+    };
+
+    const handleBlur = () => {
+        setFocusedField(null);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const book = {
+            title: formData.get('title'),
+            author: formData.get('author'),
+            description: formData.get('description'),
+            // other fields...
+        };
+        onSubmit(book);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={`${styles.formGroup} ${focusedField === 'title' ? styles.focused : ''}`}>
+                <label htmlFor="title" className={styles.label}>Book Title</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    className={styles.input} 
+                    required
+                    onFocus={() => handleFocus('title')}
+                    onBlur={handleBlur}
+                />
+            </div>
+            
+            <div className={`${styles.formGroup} ${focusedField === 'author' ? styles.focused : ''}`}>
+                <label htmlFor="author" className={styles.label}>Author</label>
+                <input 
+                    type="text" 
+                    id="author" 
+                    name="author" 
+                    className={styles.input} 
+                    required
+                    onFocus={() => handleFocus('author')}
+                    onBlur={handleBlur}
+                />
+            </div>
+            
+            <div className={styles.decorativeLine} />
+            
+            <button type="submit" className={styles.button}>
+                Add to Collection
+            </button>
+        </form>
+    );
+}
